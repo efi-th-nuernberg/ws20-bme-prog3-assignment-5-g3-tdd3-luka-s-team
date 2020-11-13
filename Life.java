@@ -13,7 +13,6 @@ public class Life implements ILife {
     l = (Life) l.nextGeneration();
   }
 
-
   public Life() {
     nukeAll();
   }
@@ -29,7 +28,6 @@ public class Life implements ILife {
 
   @Override
   public void nukeAll() {
-    // TODO Auto-generated method stub
     for (int y = 0; y < ROWS; y++)
       for (int x = 0; x < COLUMNS; x++)
       setDead(x,y);
@@ -37,13 +35,11 @@ public class Life implements ILife {
 
   @Override
   public void setAlive(int x, int y) {
-    // TODO Auto-generated method stub
     lifePhase[x][y] = '*';
   }
 
   @Override
   public void setDead(int x, int y) {
-    // TODO Auto-generated method stub
     lifePhase[x][y] = ' ';
   }
 
@@ -56,34 +52,29 @@ public class Life implements ILife {
 
   @Override
   public ILife nextGeneration() {
-    // TODO Auto-generated method stub
-    return calculateNextGeneration();
-  }
-
-  private Life calculateNextGeneration() {
-      Life nextGen = new Life();
+    Life nextGen = new Life();
       for (int y = 0; y < ROWS; y++){
-      for (int x = 0; x < COLUMNS; x++){
-      if (lifePhase[y][x] == '*' && (numberOfLivingCellsAround(y, x) == 2 && numberOfLivingCellsAround(y, x) == 3)) { // Living cell
-        nextGen.setAlive(x, y);
-      } else if (lifePhase[y][x] == ' ' && numberOfLivingCellsAround(y, x) == 3) {
-        nextGen.setAlive(x, y);
-      } else {
-        nextGen.setDead(x, y);
-      }
-      }
+        for (int x = 0; x < COLUMNS; x++){
+          if (lifePhase[y][x] == '*' && (numberOfLivingCellsAround(y, x) == 2 && numberOfLivingCellsAround(y, x) == 3)) { // Living cell
+            nextGen.setAlive(x, y);
+          } else if (lifePhase[y][x] == ' ' && numberOfLivingCellsAround(y, x) == 3) {
+            nextGen.setAlive(x, y);
+          } else {
+            nextGen.setDead(x, y);
+          }
+        }
       }
       return nextGen;
-      }
+  }
     
   private int numberOfLivingCellsAround(int x, int y) {
     int aliveCells = 0;
     for(int row = y-1; row <= y+1; row++){
       if(row>=0 && row < ROWS){
-      for(int column = x-1; column <= x+1; column++){
-        if(column>=0 && column < COLUMNS)
-        if(lifePhase[row][column]=='*') aliveCells++;
-      }
+        for(int column = x-1; column <= x+1; column++){
+          if(column>=0 && column < COLUMNS)
+          if(lifePhase[row][column]=='*') aliveCells++;
+        }
       }
     }
     if(lifePhase[y][x]=='*') aliveCells--;
