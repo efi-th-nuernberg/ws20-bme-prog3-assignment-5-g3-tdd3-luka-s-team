@@ -1,93 +1,76 @@
 public class Life implements ILife {
 
-  private final int ROWS = 5;
-  private final int COLUMNS = 5;
-  private char[][] lifePhase = new char[ROWS][COLUMNS];
-  
-  public static void main(String[] args) {
-    Life l = new Life(new String[] {  "     ",
-                                      "     ",
-                                      " *** ",
-                                      "     ",
-                                      "     " });
+  private int rowSize = 5;
+  private int columnSize = 5;
+  private boolean[][] lifePhase = new boolean[rowSize][columnSize];
+
+  /*public static void main(String[] args) {
+    Life l = new Life(new String[] { "     ", "     ", " *** ", "     ", "     " });
     l = (Life) l.nextGeneration();
   }
 
+  public Life(String[] setup) {
+    this();
+    for (int row = 0; row < setup.length; row++)
+      for (int column = 0; column < setup[row].length(); column++)
+        if (setup[row].charAt(column) != ' ' || (livingNeighbours(row, column) == 3))
+          setAlive(row, column);
+  }*/
 
   public Life() {
     nukeAll();
   }
 
-  public Life(String[] setup) {
-    this();
-    for (int y = 0; y < setup.length; y++)
-      for (int x = 0; x < setup[y].length(); x++)
-        if (setup[y].charAt(x) != ' ') setAlive(x, y);
-        else setDead(x,y);
-  }
-
-
   @Override
   public void nukeAll() {
-    // TODO Auto-generated method stub
-    for (int y = 0; y < ROWS; y++)
-      for (int x = 0; x < COLUMNS; x++)
-      setDead(x,y);
+    for (int row = 0; row < rowSize; row++)
+      for (int column = 0; column < columnSize; column++)
+        setDead(row, column);
   }
 
   @Override
-  public void setAlive(int x, int y) {
-    // TODO Auto-generated method stub
-    lifePhase[x][y] = '*';
+  public void setAlive(int row, int column) {
+    lifePhase[row][column] = true;
   }
 
   @Override
-  public void setDead(int x, int y) {
-    // TODO Auto-generated method stub
-    lifePhase[x][y] = ' ';
+  public void setDead(int row, int column) {
+    lifePhase[row][column] = false;
   }
 
   @Override
-  public boolean isAlive(int x, int y) {
-    if(lifePhase[x][y] == '*')
+  public boolean isAlive(int row, int column) {
+    if (lifePhase[row][column] == true)
       return true;
     return false;
   }
 
   @Override
   public ILife nextGeneration() {
-    // TODO Auto-generated method stub
-    return calculateNextGeneration();
-  }
-
-  private Life calculateNextGeneration() {
-      Life nextGen = new Life();
-      for (int y = 0; y < ROWS; y++){
-      for (int x = 0; x < COLUMNS; x++){
-      if (lifePhase[y][x] == '*' && (numberOfLivingCellsAround(y, x) == 2 && numberOfLivingCellsAround(y, x) == 3)) { // Living cell
-        nextGen.setAlive(x, y);
-      } else if (lifePhase[y][x] == ' ' && numberOfLivingCellsAround(y, x) == 3) {
-        nextGen.setAlive(x, y);
-      } else {
-        nextGen.setDead(x, y);
-      }
-      }
-      }
-      return nextGen;
-      }
-    
-  private int numberOfLivingCellsAround(int x, int y) {
-    int aliveCells = 0;
-    for(int row = y-1; row <= y+1; row++){
-      if(row>=0 && row < ROWS){
-      for(int column = x-1; column <= x+1; column++){
-        if(column>=0 && column < COLUMNS)
-        if(lifePhase[row][column]=='*') aliveCells++;
-      }
+    Life nextLifePhase = new Life();
+    for (int row = 0; row < rowSize; row++){
+      for (int column = 0; column < columnSize; column++){
+        if(lifePhase[row][column] == true && (livingNeighbours(row,column) == 2 || livingNeighbours(row, column) == 3))
+          nextLifePhase.setAlive(row, column);
+        else if((lifePhase[row][column] == false) && (livingNeighbours(row, column) == 3))
+          nextLifePhase.setAlive(row, column);
+        else
+          nextLifePhase.setDead(row, column);       
+      System.out.println(row + " " + column + " " + lifePhase[row][column] + " -> " + livingNeighbours(row,column) + " " + nextLifePhase.lifePhase[row][column]);
       }
     }
-    if(lifePhase[y][x]=='*') aliveCells--;
-    System.out.println(x + ", " + y + ", " + aliveCells);
-    return aliveCells;
+    return nextLifePhase;
+  }
+
+  private int livingNeighbours(int row, int column) {
+    int livingNeighbours = 0;
+    for (int y = (row - 1); y <= (row + 1); y++) {
+      for (int x = (column - 1); x <= (column + 1); x++)
+        if ((y >= 0) && (y < rowSize) && (x>=0) && (x<columnSize)) //included in array and not the given position
+          if (lifePhase[y][x] == true)
+            livingNeighbours++;
+    }
+    if(lifePhase[row][column] == true){livingNeighbours--;}
+    return livingNeighbours;
   }
 }

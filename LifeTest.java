@@ -12,6 +12,8 @@ public class LifeTest {
         l.setAlive(0, 1);
         l.setAlive(0, 2);
 
+        System.out.println();
+
         // Act: Berechnung der Folgegeneration
         ILife nextGen = l.nextGeneration();
 
@@ -23,14 +25,21 @@ public class LifeTest {
 
     @Test
     public void destroyLonelyCell() {
-       Life l = new Life();
+      Life l = new Life();
         l.setAlive(0, 0);
-        l.setAlive(0, 1);
         l.setAlive(0, 2);
-        l.setAlive(0, 4);
-         ILife nextGen = l.nextGeneration();
-      assertFalse(nextGen.isAlive(0, 4));
-      System.out.println("Test2 done");
+        l.setAlive(1, 1);
+
+         System.out.println();
+
+        // Act: Berechnung der Folgegeneration
+        ILife nextGen = l.nextGeneration();
+
+        // Assert: Alle Zellen bis auf 1,1 sollten absterben
+        assertFalse(nextGen.isAlive(0, 0));
+        assertFalse(nextGen.isAlive(0, 2));
+        assertTrue(nextGen.isAlive(1, 1));
+        System.out.println("Test2 done");
     }
 
 
@@ -39,28 +48,49 @@ public class LifeTest {
       Life l = new Life();
         l.setAlive(0, 0);
         l.setAlive(0, 1);
-        l.setAlive(0, 2);
         l.setAlive(1, 1);
+
+         System.out.println();
+
+        // Act: Berechnung der Folgegeneration
         ILife nextGen = l.nextGeneration();
-      assertTrue(nextGen.isAlive(0, 1));
-      System.out.println("Test3 done");
+
+        // Assert: Alle Zellen sollten überleben
+        assertTrue(nextGen.isAlive(0, 0));
+        assertTrue(nextGen.isAlive(0, 1));
+        assertTrue(nextGen.isAlive(1, 1));
+        System.out.println("Test3 done");
     }
 
 
     @Test
     public void destroyCrowdedCell() {
+      for(int neighbours = 4; neighbours <9; neighbours++){
       Life l = new Life();
         l.setAlive(0, 0);
         l.setAlive(0, 1);
         l.setAlive(0, 2);
-        l.setAlive(1, 1);
         l.setAlive(1, 0);
-        l.setAlive(1, 2);
-        l.setAlive(2, 2);
-        l.setAlive(2, 0);
-      ILife nextGen = l.nextGeneration();
-      assertFalse(nextGen.isAlive(1, 1));
-      System.out.println("Test4 done");
+        if(neighbours == 5){
+          l.setAlive(1, 2);
+        }else if(neighbours == 6){
+          l.setAlive(2,0);
+        }else if(neighbours == 7){
+          l.setAlive(2,1);
+        }else if(neighbours == 8){
+          l.setAlive(2,2);
+        }
+
+         System.out.println();
+
+        // Act: Berechnung der Folgegeneration
+        ILife nextGen = l.nextGeneration();
+
+        // Assert: 1,1 sollte immer absterben
+          assertFalse(nextGen.isAlive(1, 1));
+
+        System.out.println("Test3 - done with " + neighbours + " neighbours");
+      }
     }
 
 
