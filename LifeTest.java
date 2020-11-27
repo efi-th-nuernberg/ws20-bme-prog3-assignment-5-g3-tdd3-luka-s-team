@@ -73,11 +73,14 @@ public class LifeTest {
         l.setAlive(1, 0);
         if(neighbours == 5){
           l.setAlive(1, 2);
-        }else if(neighbours == 6){
+        }
+        if(neighbours == 6){
           l.setAlive(2,0);
-        }else if(neighbours == 7){
+        }
+        if(neighbours == 7){
           l.setAlive(2,1);
-        }else if(neighbours == 8){
+        }
+        if(neighbours == 8){
           l.setAlive(2,2);
         }
 
